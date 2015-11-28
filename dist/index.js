@@ -39,9 +39,12 @@ var camelize = function camelize(str) {
         return group1.toUpperCase();
     }) || str;
 };
-var onEnd = function onEnd(blocks, dest) {
+var onEnd = function onEnd(blocks, dest, opts) {
+    var ignoreEmptyBlocks = opts.ignoreEmptyBlocks;
+
     Object.keys(blocks).forEach(function (block) {
-        if (_underscore2["default"].isEmpty(blocks[block])) {
+        var size = _underscore2["default"].size(blocks[block]);
+        if (size <= 1 && ignoreEmptyBlocks) {
             return blocks[block] = undefined;
         } else {
             return Object.keys(blocks[block]).forEach(function (elem) {
@@ -102,10 +105,12 @@ var pipePostCSS = function pipePostCSS(blocks) {
 var ret = function ret(_ref) {
     var src = _ref.src;
     var dest = _ref.dest;
+    var _ref$opts = _ref.opts;
+    var opts = _ref$opts === undefined ? {} : _ref$opts;
 
     var blocks = {};
-    return _gulp2["default"].src(src).pipe((0, _gulpPlumber2["default"])({ errorHandler: _gulpNotify2["default"].onError("Babel build error: <%= error.name %> <%= error.message %>") })).pipe((0, _gulpPostcss2["default"])([pipePostCSS(blocks)])).on("end", function () {
-        return onEnd(blocks, dest);
+    return _gulp2["default"].src(src).pipe((0, _gulpPlumber2["default"])({ errorHandler: _gulpNotify2["default"].onError("Babel build error: <%= error.name %> <%= error.message %>") })).pipe((0, _gulpPostcss2["default"])([pipePostCSS(blocks, opts)])).on("end", function () {
+        return onEnd(blocks, dest, opts);
     });
 };
 
