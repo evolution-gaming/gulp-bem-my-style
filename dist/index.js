@@ -18,6 +18,14 @@ var _fs = require("fs");
 
 var _fs2 = _interopRequireDefault(_fs);
 
+var _gulpPlumber = require("gulp-plumber");
+
+var _gulpPlumber2 = _interopRequireDefault(_gulpPlumber);
+
+var _gulpNotify = require("gulp-notify");
+
+var _gulpNotify2 = _interopRequireDefault(_gulpNotify);
+
 var _gulpPostcss = require("gulp-postcss");
 
 var _gulpPostcss2 = _interopRequireDefault(_gulpPostcss);
@@ -57,7 +65,7 @@ var onEnd = function onEnd(blocks, dest) {
 };
 
 var pipePostCSS = function pipePostCSS(blocks) {
-    return function (css, result) {
+    return function (css) {
         var block_match = ":<bem>(:<block>[a-z0-9\-]+?)";
         var element_match = "(:<_element>(:<isElement>__)(:<element>[a-z0-9\-]+?))";
         var modifier_match = "(:<_modifier>(:<isModifier>\-\-)(:<modifier>[a-z0-9\-]+?))";
@@ -96,9 +104,9 @@ var ret = function ret(_ref) {
     var dest = _ref.dest;
 
     var blocks = {};
-    _gulp2["default"].src(src).on("end", function () {
+    return _gulp2["default"].src(src).pipe((0, _gulpPlumber2["default"])({ errorHandler: _gulpNotify2["default"].onError("Babel build error: <%= error.name %> <%= error.message %>") })).pipe((0, _gulpPostcss2["default"])([pipePostCSS(blocks)])).on("end", function () {
         return onEnd(blocks, dest);
-    }).pipe((0, _gulpPostcss2["default"])([pipePostCSS(blocks)]));
+    });
 };
 
 exports["default"] = ret;
