@@ -1,6 +1,8 @@
 import gulp from "gulp";
 import _ from "underscore";
 import fs from "fs";
+import plumber from "gulp-plumber";
+import notify from "gulp-notify";
 import postcss from "gulp-postcss";
 import {js_beautify as beautify} from "js-beautify";
 import {named} from "named-regexp";
@@ -67,10 +69,11 @@ const pipePostCSS = (blocks)=>(css) => {
 
 const ret = ({src,dest})=> {
     const blocks = {};
-    gulp
+    return gulp
         .src(src)
-        .on("end", ()=>onEnd(blocks, dest))
-        .pipe(postcss([pipePostCSS(blocks)]));
+        .pipe(plumber({errorHandler: notify.onError("Babel build error: <%= error.name %> <%= error.message %>")}))
+        .pipe(postcss([pipePostCSS(blocks)]))
+        .on("end", ()=>onEnd(blocks, dest));
 
 };
 
