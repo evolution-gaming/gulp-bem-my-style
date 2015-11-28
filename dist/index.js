@@ -69,7 +69,7 @@ var pipePostCSS = function pipePostCSS(blocks) {
         var block_match = ":<bem>(:<block>[a-z0-9\-]+?)";
         var element_match = "(:<_element>(:<isElement>__)(:<element>[a-z0-9\-]+?))";
         var modifier_match = "(:<_modifier>(:<isModifier>\-\-)(:<modifier>[a-z0-9\-]+?))";
-        var r = (0, _namedRegexp.named)(new RegExp("^.(" + block_match + element_match + "*" + modifier_match + "*)$", "i"));
+        var r = (0, _namedRegexp.named)(new RegExp("^\\.(" + block_match + element_match + "*" + modifier_match + "*)$", "i"));
 
         return css.nodes.forEach(function (node) {
             if (!node.selector) {

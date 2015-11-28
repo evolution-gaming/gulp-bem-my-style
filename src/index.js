@@ -38,7 +38,7 @@ const pipePostCSS = (blocks)=>(css) => {
     const block_match = ":<bem>(:<block>[a-z0-9\-]+?)";
     const element_match = "(:<_element>(:<isElement>__)(:<element>[a-z0-9\-]+?))";
     const modifier_match = "(:<_modifier>(:<isModifier>\-\-)(:<modifier>[a-z0-9\-]+?))";
-    const r = named(new RegExp(`^\.(${block_match}${element_match}*${modifier_match}*)$`, "i"));
+    const r = named(new RegExp(`^\\.(${block_match}${element_match}*${modifier_match}*)$`, "i"));
 
     return css.nodes.forEach(function (node) {
         if (!node.selector) {
