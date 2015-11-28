@@ -41,6 +41,8 @@ gulp.task "examples", ->
   bem
     src: "./examples/**/*.css"
     dest: "./examples/CSS.js"
+    opts:
+      ignoreEmptyBlocks: true
 
 doBabel = (src, dest) ->
   gulp.src src

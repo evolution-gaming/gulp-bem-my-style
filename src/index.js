@@ -9,9 +9,12 @@ import {named} from "named-regexp";
 
 
 const camelize = (str) => str && str.toLowerCase().replace(/-(.)/g, (match, group1)=>group1.toUpperCase()) || str;
-const onEnd = (blocks, dest)=> {
+const onEnd = (blocks, dest, opts)=> {
+    const ignoreEmptyBlocks = opts.ignoreEmptyBlocks;
+
     Object.keys(blocks).forEach(function (block) {
-        if (_.isEmpty(blocks[block])) {
+        const size = _.size(blocks[block]);
+        if (size <= 1 && ignoreEmptyBlocks) {
             return blocks[block] = undefined;
         } else {
             return Object.keys(blocks[block]).forEach(function (elem) {
@@ -38,7 +41,7 @@ const pipePostCSS = (blocks)=>(css) => {
     const block_match = ":<bem>(:<block>[a-z0-9\-]+?)";
     const element_match = "(:<_element>(:<isElement>__)(:<element>[a-z0-9\-]+?))";
     const modifier_match = "(:<_modifier>(:<isModifier>\-\-)(:<modifier>[a-z0-9\-]+?))";
-    const r = named(new RegExp(`^\.(${block_match}${element_match}*${modifier_match}*)$`, "i"));
+    const r = named(new RegExp(`^\\.(${block_match}${element_match}*${modifier_match}*)$`, "i"));
 
     return css.nodes.forEach(function (node) {
         if (!node.selector) {
@@ -67,13 +70,13 @@ const pipePostCSS = (blocks)=>(css) => {
     });
 };
 
-const ret = ({src,dest})=> {
+const ret = ({src,dest, opts = {}})=> {
     const blocks = {};
     return gulp
         .src(src)
         .pipe(plumber({errorHandler: notify.onError("Babel build error: <%= error.name %> <%= error.message %>")}))
-        .pipe(postcss([pipePostCSS(blocks)]))
-        .on("end", ()=>onEnd(blocks, dest));
+        .pipe(postcss([pipePostCSS(blocks, opts)]))
+        .on("end", ()=>onEnd(blocks, dest, opts));
 
 };
 
