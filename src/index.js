@@ -40,7 +40,7 @@ const onEnd = (blocks, dest, opts)=> {
 const pipePostCSS = (blocks)=>(css) => {
     const block_match = ":<bem>(:<block>[a-z0-9\-]+?)";
     const element_match = "(:<_element>(:<isElement>__)(:<element>[a-z0-9\-]+?))";
-    const modifier_match = "(:<_modifier>(:<isModifier>\-\-)(:<modifier>[a-z0-9\-]+?))";
+    const modifier_match = "(:<_modifier>(:<isModifier>\-\-)(:<isRequired>\-)*(:<modifier>[a-z0-9\-]+?))";
     const r = named(new RegExp(`^\\.(${block_match}${element_match}*${modifier_match}*)$`, "i"));
 
     return css.nodes.forEach(function (node) {
@@ -49,21 +49,23 @@ const pipePostCSS = (blocks)=>(css) => {
         }
 
         return (node.selector.split(",")).forEach(function (selector) {
-            var block, blockName, c, element, elementName, m, modifierName;
+            var block, blockName, c, element, elementName, m, modifierName, isRequired;
             m = r.exec(selector);
             c = m && m.captures;
             if (c && c.block[0]) {
                 blockName = camelize(c.block[0]);
                 elementName = camelize(c.element[0]);
                 modifierName = camelize(c.modifier[0]);
+                isRequired = camelize(c.isRequired[0]);
+
                 block = blocks[blockName] || (blocks[blockName] = {__name: blockName});
                 if (elementName) {
                     element = block[elementName] || (block[elementName] = {});
                     if (modifierName) {
-                        return element[modifierName] = 2;
+                        return element[modifierName] = isRequired ? 3 : 2;
                     }
                 } else if (modifierName) {
-                    return block[modifierName] = 2;
+                    return block[modifierName] = isRequired ? 3 : 2;
                 }
             }
         });
