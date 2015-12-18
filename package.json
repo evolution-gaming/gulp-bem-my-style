@@ -1,6 +1,6 @@
 {
   "name": "gulp-bem-my-style",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Collects BEM definitions from your CSS files and saves to single JS object",
   "main": "dist/index.js",
   "homepage": "https://github.com/evolution-gaming/gulp-bem-my-style",
