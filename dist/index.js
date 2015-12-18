@@ -57,7 +57,7 @@ var onEnd = function onEnd(blocks, dest, opts) {
 
     var jsonContent = (0, _jsBeautify.js_beautify)(JSON.stringify(blocks, {
         indent_size: 2
-    }).replace(/"([^"]+?)":/g, "$1:"));
+    }).replace(/"([a-zA-Z][^"]*?)":/g, "$1:"));
 
     var content = [];
     content.push("/**");
