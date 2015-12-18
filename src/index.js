@@ -27,7 +27,7 @@ const onEnd = (blocks, dest, opts)=> {
 
     const jsonContent = beautify((JSON.stringify(blocks, {
         indent_size: 2
-    })).replace(/"([^"]+?)":/g, "$1:"));
+    })).replace(/"([a-zA-Z][^"]*?)":/g, "$1:"));
 
     const content = [];
     content.push("/**");
